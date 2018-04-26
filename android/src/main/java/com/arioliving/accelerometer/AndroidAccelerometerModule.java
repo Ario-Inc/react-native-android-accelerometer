@@ -68,8 +68,10 @@ public class AndroidAccelerometerModule extends ReactContextBaseJavaModule imple
             data.putDouble("y", event.values[1]);
             data.putDouble("z", event.values[2]);
 
-            mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("accelerometerUpdate",
-                    data);
+            if (mThreshold != 0) {
+                mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("accelerometerUpdate",
+                        data);
+            }
         }
 
     }
