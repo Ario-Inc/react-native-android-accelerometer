@@ -4,7 +4,6 @@ import com.facebook.react.uimanager.*;
 import com.facebook.react.bridge.*;
 import com.facebook.systrace.Systrace;
 import com.facebook.systrace.SystraceMessage;
-import com.sun.corba.se.spi.ior.Writeable;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
@@ -21,9 +20,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+public class AndroidAccelerometerModule extends ReactContextBaseJavaModule implements SensorEventListener {
 
-public class AndroidAccelerometerModule extends ReactContextBaseJavaModule implements SensorEventListener{
-    
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private float lastX = 0;
@@ -36,12 +34,11 @@ public class AndroidAccelerometerModule extends ReactContextBaseJavaModule imple
     public AndroidAccelerometerModule(ReactApplicationContext reactContext) {
         super(reactContext);
         mReactContext = reactContext;
-        
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        mSensorManager = (SensorManager) reactContext.getApplicationContext().getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
-
 
     @Override
     public String getName() {
@@ -50,7 +47,7 @@ public class AndroidAccelerometerModule extends ReactContextBaseJavaModule imple
 
     @ReactMethod
     public void setThreshold(double threshold) {
-        mThreshold = (float)threshold;
+        mThreshold = (float) threshold;
     }
 
     @Override
@@ -66,14 +63,13 @@ public class AndroidAccelerometerModule extends ReactContextBaseJavaModule imple
             lastY = event.values[1];
             lastZ = event.values[2];
 
-            WriteableMap data = new WriteableMap();
+            WritableMap data = Arguments.createMap();//new WriteableMap();
             data.putDouble("x", event.values[0]);
             data.putDouble("y", event.values[1]);
             data.putDouble("z", event.values[2]);
 
-            mReactContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit("accelerometerUpdate", data);
+            mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("accelerometerUpdate",
+                    data);
         }
 
     }

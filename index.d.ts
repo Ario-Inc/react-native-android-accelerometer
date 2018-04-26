@@ -4,5 +4,4 @@
 
 export as namespace AndroidAccelerometerModule;
 
-export function acquireWakeLock(screenOn: boolean): Promse<boolean>;
-export function releaseWakeLock(): Promise<boolean>;
+export function setThreshold(threshold: number): void;
