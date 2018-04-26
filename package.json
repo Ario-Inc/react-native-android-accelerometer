@@ -1,0 +1,30 @@
+{
+    "name": "react-native-android-accelerometer",
+    "version": "0.0.1",
+    "description": "A react-native implementation for sensing motion",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "react",
+        "react-component",
+        "react-native",
+        "android",
+        "sensor",
+        "accelerometer"
+    ],
+    "author": "Will Dimmit <will@arioliving.com>",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/Ario-Inc/react-native-android-accelerometer",
+    "bugs": "https://github.com/Ario-Inc/react-native-android-accelerometer/issues",
+    "peerDependencies": {
+        "react-native": ">=0.50"
+    },
+    "dependencies": {},
+    "rnpm": {
+        "android": {
+            "packageInstance": "new AndroidAccelerometerPackage()"
+        }
+    }
+}
