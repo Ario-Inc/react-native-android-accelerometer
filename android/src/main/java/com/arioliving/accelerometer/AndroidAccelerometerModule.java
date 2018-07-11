@@ -26,9 +26,10 @@ public class AndroidAccelerometerModule extends ReactContextBaseJavaModule imple
     private Sensor mSensor;
     private float lastX = 0;
     private float lastY = 0;
-    private float lastZ = 9;
+    private float lastZ = 0;
     private ReactApplicationContext mReactContext;
     private float mThreshold = 0;
+    private boolean isCalibrated = false;
 
     //Constructor
     public AndroidAccelerometerModule(ReactApplicationContext reactContext) {
@@ -53,24 +54,31 @@ public class AndroidAccelerometerModule extends ReactContextBaseJavaModule imple
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        // get the change of the x,y,z values of the accelerometer
         float x = Math.abs(lastX - event.values[0]);
         float y = Math.abs(lastY - event.values[1]);
         float z = Math.abs(lastZ - event.values[2]);
-        // if the change is below 2, it is just plain noise
-        if (x > mThreshold || y > mThreshold || z > mThreshold) {
+        // if the total change is below mThreshold, it is noise
+        if (x + y + z > mThreshold) {
             lastX = event.values[0];
             lastY = event.values[1];
             lastZ = event.values[2];
 
-            WritableMap data = Arguments.createMap();//new WriteableMap();
+            WritableMap data = Arguments.createMap();
             data.putDouble("x", event.values[0]);
             data.putDouble("y", event.values[1]);
             data.putDouble("z", event.values[2]);
 
-            if (mThreshold != 0) {
+            if (mThreshold != 0 && isCalibrated) {
                 mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("accelerometerUpdate",
                         data);
+            }
+
+            if (!isCalibrated) {
+                lastX = event.values[0];
+                lastY = event.values[1];
+                lastZ = event.values[2];
+
+                isCalibrated = true; 
             }
         }
 
